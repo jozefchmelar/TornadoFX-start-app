@@ -1,69 +1,46 @@
 buildscript {
-    ext.kotlin_version = '1.2.30'
+    ext.kotlin_version = '1.3.31'
 
     repositories {
-        mavenLocal()
-        mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
+
 }
-
-apply plugin: "kotlin"
-
-kotlin {
-    experimental {
-        coroutines 'enable'
-    }
-}
-
-apply plugin: 'application'
-mainClassName = 'com.myApp.app.MyApp'
 
 allprojects {
+    group 'discreteSim'
+    version '0.1'
+
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url 'https://jitpack.io' }
+    }
+
+}
+
+subprojects {
+    apply plugin: 'kotlin'
+
     task initSourceFolders {
         sourceSets*.kotlin.srcDirs*.each { it.mkdirs() }
+        sourceSets*.resources.srcDirs*.each { it.mkdirs() }
     }
-}
-
-repositories {
-    mavenLocal()
-    mavenCentral()
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-    maven { url 'https://jitpack.io' }
-}
-
-dependencies {
-    compile 'no.tornado:tornadofx:1.7.15'
-    testCompile 'junit:junit:4.12'
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.21"
-
-//    RxJava
-//    compile 'com.github.thomasnield:rxkotlinfx:2.2.2'
-//    compile 'io.reactivex.rxjava2:rxkotlin:2.2.0'
-//    compile "com.github.akarnokd:rxjava2-extensions:0.18.7"
-
-}
-
-jar {
-    manifest {
-        attributes(
-                'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
-                'Main-Class': 'com.myApp.app.MyApp'
-        )
+    compileKotlin {
+        kotlinOptions.jvmTarget = "1.8"
     }
-    from(configurations.compile.collect { entry -> zipTree(entry) }) {
-        exclude 'META-INF/MANIFEST.MF'
-        exclude 'META-INF/*.SF'
-        exclude 'META-INF/*.DSA'
-        exclude 'META-INF/*.RSA'
+
+    compileTestKotlin {
+        kotlinOptions.jvmTarget = "1.8"
     }
-}
 
+    dependencies {
+        testCompile 'junit:junit:4.12'
+        compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    }
 
-
-compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
 }
