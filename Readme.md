@@ -1,4 +1,4 @@
-#TornadoFX starter app
+# TornadoFX starter app
 Samle TornadoFX starter app with enabled coroutines :) 
 
 ## How to run
