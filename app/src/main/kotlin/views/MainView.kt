@@ -19,7 +19,7 @@ class MainView : View("MainView") {
 
     override val root = hbox {
         hbox {
-            padding = Insets(10.0)
+            paddingAll = 10.0
             textfield("Hello world").addClass("title")
             textfield().bind(controller.stateProperty) { it.xid.toString() }
         }
